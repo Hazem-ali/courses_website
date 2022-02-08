@@ -69,23 +69,27 @@ class Person (models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
     phone = models.CharField(max_length=20)
-    image = models.TextField()
+    image = models.FileField(upload_to="images", max_length=100)
+
 
 class Instructor(models.Model):
     # Insturctor(id, name, image, description, rate)
     person_id = models.ForeignKey(Person, on_delete=models.CASCADE)
     description = models.TextField()
 
+
 class Student(models.Model):
     person_id = models.ForeignKey(Person, on_delete=models.CASCADE)
 
+
 class Rate(models.Model):
-    
+
     instructor_id = models.ForeignKey(Instructor, on_delete=models.CASCADE)
     rate = models.IntegerField(
         default=0,
         validators=[MaxValueValidator(5), MinValueValidator(1)]
     )
+
 
 class Course(models.Model):
     # Course(id, category_id, name, details, price, updated_at, created_at, language)
@@ -96,16 +100,25 @@ class Course(models.Model):
     category_id = models.ForeignKey(Category, on_delete=CASCADE)
     updated_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    instructors = models.ManyToManyField(Instructor)
-    students = models.ManyToManyField(Student)
+    # instructors = models.ManyToManyField(Instructor)
+    # students = models.ManyToManyField(Student)
 
 
+class CourseInstructor(models.Model):
+    course_id = models.ForeignKey(Course, on_delete=CASCADE)
+    instructor_id = models.ForeignKey(Instructor, on_delete=models.CASCADE)
+
+
+class CourseStudent(models.Model):
+    course_id = models.ForeignKey(Course, on_delete=CASCADE)
+    student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
 
 
 class CourseImage(models.Model):
     # CourseImage(id, image_path, course_id, )
-    image_path = models.TextField()
+    image_path = models.FileField(upload_to="course_images", max_length=100)
     course_id = models.ForeignKey(Course, on_delete=CASCADE)
+
 
 class CourseVideo(models.Model):
     # CourseVideo(id, video_path, course_id, name, description,subtitle_path)
@@ -113,3 +126,15 @@ class CourseVideo(models.Model):
     description = models.TextField()
     subtitle_path = models.TextField()
     course_id = models.ForeignKey(Course, on_delete=CASCADE)
+
+
+class Article(models.Model):
+    # Category(id, name)
+    title = models.CharField(max_length=255)
+    body = models.TextField()
+
+
+class Partner(models.Model):
+    # Category(id, name)
+    name = models.CharField(max_length=255)
+    logo = models.FileField(upload_to="logos", max_length=100)

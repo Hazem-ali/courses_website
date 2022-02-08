@@ -5,3 +5,5 @@ from courses_app import models
 
 # makes userprofile accessible on admin interface
 admin.site.register(models.UserProfile)
+admin.site.register(models.Course)
+admin.site.register(models.Category)
